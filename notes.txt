@@ -1,0 +1,2 @@
+Kosten pro Jahr= Verbrauch pro Jahr (in KWh) * Variable Kosten (in €) + Fixkosten pro Jahr (in €)
+

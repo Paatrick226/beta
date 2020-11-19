@@ -13,9 +13,9 @@ async function provideDatabase() {
     await db.exec(
       "CREATE TABLE tarife (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR, zipCode INTEGER, fixCosts INTEGER, varCosts INTEGER)"
     );
-    await db.exec(
-      "CREATE TABLE order (id INTEGER PRIMARY KEY AUTOINCREMENT, tarifID INTEGER, agentID INTEGER, customerID INTEGER, consumption INTEGER, price INTEGER)"
-    );
+    /*await db.exec(
+      "CREATE TABLE order (id INTEGER PRIMARY KEY AUTOINCREMENT, tarifID INTEGER, agentID INTEGER, customerID INTEGER, consumption INTEGER, price INTEGER, status VARCHAR)"
+    );*/
     await db.exec(
       "CREATE TABLE agent (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR, provision INTEGER)"
     );
