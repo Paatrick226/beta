@@ -16,7 +16,7 @@ app.use(express.static("public"));
 app.get("/", (req, res) => {
   console.log('Läuft')
   res.sendFile(__dirname + "/views/index.html");
-});
+}); 
 
 
 let csvStream = csv.parseFile("./tarifdaten.csv", {headers: true, delimiter: ';'})
