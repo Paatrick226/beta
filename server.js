@@ -8,9 +8,8 @@ const app = express();
 
 app.use(express.static("public"));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// make all the files in 'public' available
-// https://expressjs.com/en/starter/static-files.html
 app.use(express.static("public"));
 
 
@@ -45,43 +44,46 @@ app.get("/tarife/input", async (request, response) => {
       csvStream.resume();
     })
     .on("end", () => {
-      console.log("fertig parsed");
+      console.log("fertig geparsed");
     })
     .on("error", err => {
       console.log(err);
     });
-  response.redirect("/tarife");
+  response.send("aight");
 });
 
 
 app.get("/tarife", async (request, response) => {
   const db = await database;
-  const result = await db.get(
+  const result = await db.all(
     "SELECT * FROM tarife WHERE zipCode = ?",
     request.query.zipCode
   );
   response.send(result);
 });
 
-/*
-app.get(
-  "/rates/zipCode=:zip&consumption=:consumption",
-  async (request, response) => {
-    let zipCode = request.params.zip;
-    let consumption = request.params.consumption;
-    const db = await database;
-    const result = await db.get(
-      "SELECT name,  FROM tarife WHERE zipCode = ?",
-      request.params.zip
-    );
-    response.send(zipCode);
-  }
-);
-*/
+
+
 app.get("/tarife/reset", async (request, response) => {
   const db = await database;
   const results = await db.all("DELETE FROM tarife");
   response.send("Daten gelöscht");
+});
+
+// Neue Bestellung anlegen
+app.post('/orders', (req, res) => {
+  console.log(req.body.firstName);
+  res.send('OK');
+});
+
+// aktualisierung von ??? tarife, Orders, kunden etc
+app.put('/orders', (req, res) => {
+  
+});
+
+// Löschen von Daten
+app.delete('/orders', (req, res) => {
+  
 });
 
 app.get("/tarife/:id", async (request, response) => {
@@ -98,7 +100,26 @@ app.get("/tarife/:id", async (request, response) => {
 });
 
 
+//Kosten pro Jahr= Verbrauch pro Jahr (in KWh) * Variable Kosten (in €) + Fixkosten pro Jahr (in €)
+app.post("/", async (req, res) => {
+  // console.log(req.body.plz + " - " + req.body.verbrauch);
+  const db = await database;
+  const result = await db.all(
+    "SELECT * FROM tarife WHERE zipCode = ?",
+    req.body.plz
+  );
 
+  // console.log(req.body.plz + " - " + req.body.verbrauch);
+  // console.log(result);
+  result.forEach(elm => {
+    //console.log(parseFloat(req.query.cons) * elm.varCosts * 12 + elm.fixCosts);
+    let erg =
+      parseFloat(req.body.verbrauch) * elm.varCosts * 12 + elm.fixCosts;
+    elm.price = erg;
+  });
+  res.send(result);
+  
+});
 
 
 
